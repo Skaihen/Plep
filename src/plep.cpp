@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 // The lexer returns tokens [0-255] if it is an unknown character, otherwise one
 // of these for known things.
@@ -62,4 +63,41 @@ static int gettok()
         NumVal = strtod(NumStr.c_str(), 0);
         return tok_number;
     }
+
+    if (LastChar == '#')
+    {
+        // Comment until end of line.
+        do
+        {
+            LastChar = getchar();
+        } while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
+
+        if (LastChar != EOF)
+        {
+            return gettok();
+        }
+    }
+
+    // Check for end of file.  Don't eat the EOF.
+    if (LastChar == EOF)
+    {
+        return tok_eof;
+    }
+
+    // Otherwise, just return the character as its ascii value.
+    int ThisChar = LastChar;
+    LastChar = getchar();
+    return ThisChar;
 }
+
+// Lexer test
+// int main()
+// {
+//     while (true)
+//     {
+//         int tok = gettok();
+//         std::cout << "tok: " << tok << std::endl;
+//     }
+
+//     return 0;
+// }
