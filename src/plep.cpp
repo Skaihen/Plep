@@ -1,5 +1,6 @@
 #include <string>
-#include <iostream>
+#include <memory>
+#include <vector>
 
 // The lexer returns tokens [0-255] if it is an unknown character, otherwise one
 // of these for known things.
@@ -90,14 +91,59 @@ static int gettok()
     return ThisChar;
 }
 
-// Lexer test
-// int main()
-// {
-//     while (true)
-//     {
-//         int tok = gettok();
-//         std::cout << "tok: " << tok << std::endl;
-//     }
+/* Lexer test
+int main()
+{
+    while (true)
+    {
+        int tok = gettok();
+        std::cout << "tok: " << tok << std::endl;
+    }
 
-//     return 0;
-// }
+    return 0;
+} */
+
+// ExprAST - Base class for all expression nodes.
+class ExprAST
+{
+public:
+    virtual ~ExprAST() {}
+};
+
+// NumberExprAST - Expression class for numeric literals like "1.0".
+class NumberExprAST : public ExprAST
+{
+    double Val;
+
+public:
+    NumberExprAST(double Val) : Val(Val) {}
+};
+
+// VariableExprAST - Expression class for referencing a variable, like "a".
+class VariableExprAST : public ExprAST
+{
+    std::string Name;
+
+public:
+    VariableExprAST(const std::string &Name) : Name(Name) {}
+};
+
+// BinaryExprAST - Expression class for a binary operator.
+class BinaryExprAST : public ExprAST
+{
+    char Op;
+    std::unique_ptr<ExprAST> LHS, RHS;
+
+public:
+    BinaryExprAST(char op, std::unique_ptr<ExprAST> LHS, std::unique_ptr<ExprAST> RHS) : Op(op), LHS(std::move(LHS)), RHS(std::move(RHS)) {}
+};
+
+// CallExprAST - Expression class for function calls.
+class CallExprAST : public ExprAST
+{
+    std::string Callee;
+    std::vector<std::unique_ptr<ExprAST>> Args;
+
+public:
+    CallExprAST(const std::string &Callee, std::vector<std::unique_ptr<ExprAST>> Args) : Callee(Callee), Args(std::move(Args)) {}
+};
