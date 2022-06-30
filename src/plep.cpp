@@ -236,37 +236,58 @@ static std::unique_ptr<ExprAST> ParseIdentifierExpr()
         // Call.
         getNextToken(); // eat (
         std::vector<std::unique_ptr<ExprAST>> Args;
-        if (CurTok != ')')
+
+        while (true)
         {
-            while (1)
+            auto Arg = ParseExpression();
+            if (Arg)
             {
-                if (auto Arg = ParseExpression())
-                {
-                    Args.push_back(std::move(Arg));
-                }
-                else
-                {
-                    return nullptr;
-                }
-                if (CurTok == ')')
-                {
-                    break;
-                }
-                if (CurTok != ',')
-                {
-                    return LogError("Expected ')' or ',' in argument list");
-                }
-                getNextToken();
+                Args.push_back(Arg);
+            }
+            else
+            {
+                return nullptr;
+            }
+
+            if (CurTok == ')')
+            {
+                getNextToken(); // eat )
+                break;
+            }
+            if (CurTok == ',')
+            {
+                getNextToken(); // eat ,
+                continue;
+            }
+            else
+            {
+                return LogError("Expected ')' or ',' in argument list");
             }
         }
+
+        return std::make_unique<CallExprAST>(IdName, std::move(Args));
     }
     else
     { // Simple variable ref.
         return std::make_unique<VariableExprAST>(IdName);
     }
+}
 
-    // Eat the ')'.
-    getNextToken();
-
-    return std::make_unique<CallExprAST>(IdName, std::move(Args));
+// primary
+//   ::= identifierexpr
+//   ::= numberexpr
+//   ::= parenexpr
+static std::unique_ptr<ExprAST> ParsePrimary()
+{
+    switch (CurTok)
+    {
+    case tok_identifier:
+        return ParseIdentifierExpr();
+    case tok_number:
+        return ParseNumberExpr();
+    case '(':
+        return ParseParenExpr();
+    default:
+        return LogError("unknown token when expecting an expression");
+    }
 }
