@@ -1,3 +1,3 @@
 # PLEP
 
-Plep is a programming language made in cpp with LLVM.
+Plep is a WebAssembly compiler written in TypeScript.
