@@ -1,3 +1,3 @@
 # PLEP
 
-Plep is a WebAssembly compiler written in TypeScript.
+Plep is a WebAssembly compiler written in Rust.
