@@ -1,3 +1,3 @@
 # PLEP
 
-Plep is a WebAssembly compiler written in Antlr4.
+Plep is a programming language written in Antlr4.
