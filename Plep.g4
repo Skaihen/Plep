@@ -1,9 +1,12 @@
-grammar Plep;		
-prog:	plep EOF ;
-plep:	plep ('*'|'/') plep
-    |	plep ('+'|'-') plep
-    |	INT
-    |	'(' plep ')'
-    ;
-NEWLINE : [\r\n]+ -> skip;
-INT     : [0-9]+ ;
+grammar Plep;
+
+prog : statement+;
+
+statement : let | show ;
+
+let : VAR '=' INT ;
+show : 'show' (INT | VAR) ;
+
+VAR : [a-z]+ ;
+INT : [0–9]+ ;
+WS : [ \n\t]+ -> skip;
