@@ -26,7 +26,7 @@
  */
 %token <string> TIDENTIFIER TINTEGER TDOUBLE
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
-%token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
+%token <token> TLPAREN TRPAREN TLBRACE TRBRACE TPIPE TCOMMA TDOT
 %token <token> TPLUS TMINUS TMUL TDIV
 
 /* Define the type of node our nonterminal symbols represent.
