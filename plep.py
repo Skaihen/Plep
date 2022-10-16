@@ -72,7 +72,7 @@ TT_RPAREN = 'RPAREN'
 
 
 class Token:
-    def __init__(self, type_, value = None):
+    def __init__(self, type_, value=None):
         self.type = type_
         self.value = value
 
@@ -119,7 +119,7 @@ class Lexer:
         else:
             return Token(TT_FLOAT, float(num_str))
 
-    def parse_tokens(self):
+    def make_tokens(self):
         tokens = []
 
         while self.current_char != None:
@@ -155,12 +155,42 @@ class Lexer:
 
 
 ###################################################
+# NODES
+###################################################
+
+
+class NumberNode:
+    def __init__(self, tok):
+        self.tok = tok
+
+    def __repr__(self):
+        return f'{self.tok}'
+
+class BinOpNode:
+    def __init__(self, left_node, op_tok, right_node):
+        self.left_node = left_node
+        self.op_tok = op_tok
+        self.right_node = right_node
+
+    def __repr__(self):
+        return f'({self.left_node}, {self.op_tok}, {self.right_node})'
+
+
+###################################################
+# PARSER
+###################################################
+
+
+
+
+
+###################################################
 # RUN
 ###################################################
 
 
 def run(fname, text):
     lexer = Lexer(fname, text)
-    tokens, error = lexer.parse_tokens()
+    tokens, error = lexer.make_tokens()
 
     return tokens, error
